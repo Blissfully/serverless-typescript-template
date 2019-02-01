@@ -1,0 +1,22 @@
+Parameters:
+  Stage:
+    Type: String
+    Default: ${self:provider.stage}
+    AllowedValues:
+      - dev
+      - prod
+
+Conditions:
+  Production:
+    Fn::Equals:
+      - Ref: Stage
+      - prod
+  Development:
+    Fn::Equals:
+      - Ref: Stage
+      - dev
+
+Resources:
+  # Please name resources according to the rules outlines here: https://serverless.com/framework/docs/providers/aws/guide/resources/
+
+

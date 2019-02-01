@@ -1,0 +1,100 @@
+service: TEMPLATE
+
+package:
+  excludeDevDependencies: true
+  exclude:
+    - ./**
+    - node_modules/aws-sdk/**
+    - "!node_modules/**"
+  include:
+    - build/**
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${env:BLISSFULLY_ENV}
+  region: ${env:AWS_REGION}
+  timeout: 900
+  tracing: true
+  cfLogs: true
+  environment:
+    AWS_ACCOUNT_ID: ${env:AWS_ACCOUNT_ID}
+    BLISSFULLY_ENV: ${env:BLISSFULLY_ENV}
+    ROLLBAR_ACCESS_TOKEN: ${env:ROLLBAR_ACCESS_TOKEN}
+    TZ: "utc"
+
+  iamRoleStatements:
+    # - Effect: "Allow"
+    #   Action:
+    #     - firehose:PutRecordBatch
+    #   Resource:
+    #     - Fn::GetAtt:
+    #         - GoogleTokensDeliveryStream
+    #         - Arn
+    #     - Fn::GetAtt:
+    #         - GoogleSamlDeliveryStream
+    #         - Arn
+    # - Effect: "Allow"
+    #   Action:
+    #     - "xray:PutTraceSegments"
+    #     - "xray:PutTelemetryRecords"
+    #   Resource:
+    #     - "*"
+    # - Effect: "Allow"
+    #   Action:
+    #     - "sqs:GetQueueUrl"
+    #     - "sqs:SendMessageBatch"
+    #     - "sqs:SendMessage"
+    #   Resource:
+    #     - Fn::Sub: arn:aws:sqs:#{AWS::Region}:#{AWS::AccountId}:${self:provider.stage}-${self:service}-*
+    # - Effect: "Allow"
+    #   Action:
+    #     - "s3:ListBucket"
+    #   Resource:
+    #     Fn::GetAtt:
+    #       - S3BucketCannon
+    #       - Arn
+    # - Effect: "Allow"
+    #   Action:
+    #     - "s3:PutObject"
+    #     - "s3:GetObject"
+    #   Resource:
+    #     - Fn::Join:
+    #         - ""
+    #         - - Fn::GetAtt:
+    #               - S3BucketCannon
+    #               - Arn
+    #           - "/*"
+    # - Effect: "Allow"
+    #   Action:
+    #     - "cloudwatch:PutMetricData"
+    #   Resource: "*"
+    #   # Allow any Lambda to call state machines
+    # - Effect: "Allow"
+    #   Action:
+    #     - "states:StartExecution"
+    #   Resource: "arn:aws:states:#{AWS::Region}:#{AWS::AccountId}:stateMachine:*"
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-tracing
+  - serverless-prune-plugin
+  - serverless-pseudo-parameters
+  - serverless-step-functions
+
+functions:
+  # ExplodeMessage:
+  #   handler: build/explodeMessage.handler
+  #   memorySize: 3008
+  #   environment:
+  #     QUEUE_URL:
+  #       Ref: ExplodeMessageQueue
+  #   events:
+  #     - sqs:
+  #         batchSize: 1
+  #         arn:
+  #           Fn::GetAtt:
+  #             - ExplodeMessageQueue
+  #             - Arn
+
+resources: ${file(./cloudformation.yml)}

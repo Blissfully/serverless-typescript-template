@@ -1,0 +1,11 @@
+export TZ=utc
+export AWS_REGION=us-east-1
+# export SLS_DEBUG=*
+# export DEBUG=knex:query
+# export NODE_OPTIONS=--max_old_space_size=8192
+
+# DEV
+export BLISSFULLY_ENV=
+export AWS_ACCOUNT_ID=
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
