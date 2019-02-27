@@ -2,6 +2,7 @@
   "include": ["./src/**/*.ts"],
   "exclude": ["./node_modules", "**/__tests__"],
   "compilerOptions": {
+    "inlineSourceMap": true,
     "moduleResolution": "node",
     "module": "commonjs",
     "target": "es2017",
